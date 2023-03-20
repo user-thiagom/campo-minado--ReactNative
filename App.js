@@ -1,12 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import Field from './src/components/Field';
+import params from './src/params';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <SafeAreaView style={styles.container}>
+      <Text>Iniciando o Mines!</Text>
+      <Text>Tamanho da Grade: {params.getRowsAmount()}x{params.getColumsAmount()}</Text>
+      <Field/>
+      <Field opened/>
+      <Field opened nearMines={1}/>
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
