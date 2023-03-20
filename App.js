@@ -11,6 +11,8 @@ export default function App() {
       <Field/>
       <Field opened/>
       <Field opened nearMines={1}/>
+      <Field opened mined/>
+      <Field opened mined exploded/>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
