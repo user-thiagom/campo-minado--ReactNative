@@ -6,6 +6,7 @@ import { cloneBoard, createMineBoard, flagsUsed, hadExplosion, invertFlag, openF
 import { useState } from 'react';
 import MineField from './src/components/MineField';
 import Header from './src/components/Header';
+import LevelSelection from './src/screens/LevelSelection';
 
 export default function App() {
 
@@ -21,9 +22,12 @@ export default function App() {
     return {
       board: createMineBoard(rows, cols, this.minesAmount()),
       won: false,
-      lost: false
+      lost: false,
+      showLevelSelection:false
     }
   }
+
+  const [state,setState] = useState(createState())
 
   onOpenField = (row,column)=>{
     const board = cloneBoard(state.board)
@@ -40,7 +44,12 @@ export default function App() {
       Alert.alert('Parabéns!', 'Você Venceu!')
     }
 
-    setState({board, lost, won})
+    setState(state=>({
+      ...state,
+      board,
+      won,
+      lost
+    }))
   }
 
   onSelectField = (row,column)=>{
@@ -59,12 +68,16 @@ export default function App() {
     }))
   }
 
-  const [state,setState] = useState(createState())
+  onLevelSelected = level =>{
+    params.difficultLevel = level
+    setState(createState())
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-      <Header flagsLeft={minesAmount() - flagsUsed(state.board)} onNewGame={()=>setState(createState())} />
+      <LevelSelection isVisible={state.showLevelSelection} onLevelSelected={onLevelSelected} onCancel={()=>setState(state=>({...state,showLevelSelection:false}))}/>
+      <Header flagsLeft={minesAmount() - flagsUsed(state.board)} onNewGame={()=>setState(createState())} onFlagPress={()=>setState(state=>({...state,showLevelSelection:true}))}/>
       <View style={styles.board}>
         <MineField board={state.board} onOpenField={onOpenField} onSelectField={onSelectField}/>
       </View>
