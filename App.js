@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Field from './src/components/Field';
 import params from './src/params';
-import { createMineBoard } from './src/functions';
+import { cloneBoard, createMineBoard, hadExplosion, openField, showMines, wonGame } from './src/functions';
 import { useState } from 'react';
 import MineField from './src/components/MineField';
 
@@ -18,8 +18,28 @@ export default function App() {
     const cols = params.getColumsAmount()
     const rows = params.getRowsAmount()
     return {
-      board: createMineBoard(rows, cols, this.minesAmount())
+      board: createMineBoard(rows, cols, this.minesAmount()),
+      won: false,
+      lost: false
     }
+  }
+
+  onOpenField = (row,column)=>{
+    const board = cloneBoard(state.board)
+    openField(board,row,column)
+    const lost = hadExplosion(board)
+    const won = wonGame(board)
+
+    if(lost){
+      showMines(board)
+      Alert.alert('Perdeuuuu!', 'Que buuuuurro!')
+    }
+
+    if(won){
+      Alert.alert('Parabéns!', 'Você Venceu!')
+    }
+
+    setState({board, lost, won})
   }
 
   const [state,setState] = useState(createState())
@@ -30,7 +50,7 @@ export default function App() {
       <Text>Iniciando o Mines!</Text>
       <Text>Tamanho da Grade: {params.getRowsAmount()}x{params.getColumsAmount()}</Text>
       <View style={styles.board}>
-        <MineField board={state.board}/>
+        <MineField board={state.board} onOpenField={onOpenField}/>
       </View>
     </SafeAreaView>
   );
