@@ -7,7 +7,6 @@ import { useState } from 'react';
 import MineField from './src/components/MineField';
 
 export default function App() {
-  const [state,setState] = useState(createState())
 
   minesAmount = () => {
     const cols = params.getColumsAmount()
@@ -22,6 +21,8 @@ export default function App() {
       board: createMineBoard(rows, cols, this.minesAmount())
     }
   }
+
+  const [state,setState] = useState(createState())
 
   return (
     <SafeAreaView style={styles.container}>
