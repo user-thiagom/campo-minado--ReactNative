@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Alert, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Field from './src/components/Field';
 import params from './src/params';
-import { cloneBoard, createMineBoard, hadExplosion, openField, showMines, wonGame } from './src/functions';
+import { cloneBoard, createMineBoard, hadExplosion, invertFlag, openField, showMines, wonGame } from './src/functions';
 import { useState } from 'react';
 import MineField from './src/components/MineField';
 
@@ -42,6 +42,22 @@ export default function App() {
     setState({board, lost, won})
   }
 
+  onSelectField = (row,column)=>{
+    const board = cloneBoard(state.board)
+    invertFlag(board,row,column)
+    const won = wonGame(board)
+
+    if (won) {
+      Alert.alert('Parabéns!', 'Você venceu!!!')
+    }
+
+    setState(state=>({
+      ...state,
+      board,
+      won
+    }))
+  }
+
   const [state,setState] = useState(createState())
 
   return (
@@ -50,7 +66,7 @@ export default function App() {
       <Text>Iniciando o Mines!</Text>
       <Text>Tamanho da Grade: {params.getRowsAmount()}x{params.getColumsAmount()}</Text>
       <View style={styles.board}>
-        <MineField board={state.board} onOpenField={onOpenField}/>
+        <MineField board={state.board} onOpenField={onOpenField} onSelectField={onSelectField}/>
       </View>
     </SafeAreaView>
   );
